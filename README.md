@@ -1,235 +1,310 @@
-# Rongyok Video Player 🎬
+# ✅ Rongyok Video Player v4 - iOS Optimized
 
-เครื่องเล่นวิดีโอส่วนตัวสำหรับ rongyok.com ที่ออกแบบมาเพื่อความสะดวก ความเป็นส่วนตัว และการจดจำความคืบหน้า
+## 🎉 สร้างเสร็จเรียบร้อย!
 
----
-
-## ✨ ฟีเจอร์หลัก
-
-### 🎯 **เครื่องเล่น Fullscreen** 
-- เปิดวิดีโอเต็มจอแบบสะอาด
-- ไม่มีปุ่มและเมนูรบกวน
-- แสดงเพียงชื่อตอน + ปุ่มควบคุม
-
-### 💾 **Auto-Resume**
-- จำตำแหน่งที่เล่นแล้ว
-- กลับมาเล่นต่อจากจุดเดิม
-- บันทึกสำหรับแต่ละตอน
-
-### 🔄 **Auto-Save**
-- บันทึกทุก 5 วินาที
-- บันทึกโดยอัตโนมัติเมื่อหยุดเล่น
-- เก็บในที่ฉันของเบราว์เซอร์
-
-### 🎮 **ควบคุมมาตรฐาน**
-- ปุ่ม Play/Pause
-- ปุ่มเลื่อนเวลา
-- ปุ่มควบคุมเสียง
-- ปุ่มขยายเต็มจอ (⛶)
-
-### 📱 **เข้ากันได้ทั่วไป**
-- ทำงานบน Chrome, Firefox, Edge, Safari
-- ใช้งานบนมือถือ
-- ใช้งานบนเดสก์ท็อป
+เครื่องเล่นวิดีโอส่วนตัวสำหรับ rongyok.com ที่ออกแบบให้ทำงานบน iOS/iPhone/iPad อย่างสมบูรณ์
 
 ---
 
-## 📦 ชุดความสามารถ
+## 📋 ไฟล์ที่สร้าง
 
-มี 2 วิธีใช้งาน:
-
-### **1️⃣ Userscript (แนะนำ)** 
-ใช้เมื่อเข้าเว็บ rongyok.com โดยตรง
-
-- ✅ ทำงานเงียบๆ ข้างหลัง
-- ✅ ไม่ต้องเปิด web app แยก
-- ✅ Auto-extract MP4 จากเว็บ
-- ✅ Auto-fullscreen เมื่อเล่น
-
-### **2️⃣ Web App**
-เปิด index.html ที่เครื่องของคุณ
-
-- ✅ ดึงรายการวิดีโอจาก rongyok.com
-- ✅ เลือกวิดีโอจากรายการ
-- ✅ เล่นใน Fullscreen Player
-- ✅ Auto-resume + Auto-save
-
----
-
-## 🚀 วิธีติดตั้ง
-
-### **ตัวเลือก A: ติดตั้ง Userscript**
-
-#### ขั้นตอนที่ 1: ติดตั้ง Tampermonkey
-- **Chrome/Edge/Brave**: [ดาวน์โหลด](https://chrome.google.com/webstore/detail/tampermonkey/)
-- **Firefox**: [ดาวน์โหลด](https://addons.mozilla.org/firefox/addon/tampermonkey/)
-- **Safari**: [ดาวน์โหลด](https://apps.apple.com/app/tampermonkey/id1482490089)
-
-#### ขั้นตอนที่ 2: ติดตั้ง Script
-คลิกลิงก์นี้:
+### **HTML & Config**
 ```
-https://raw.githubusercontent.com/Prasong1993/rongyok-video-player/main/rongyok-auto-fullscreen.user.js
+app/
+├── index.html          ✅ หน้าหลัก (iOS viewport fix)
+├── manifest.json       ✅ PWA config
+└── sw.js              ✅ Service Worker cache
 ```
 
-Tampermonkey จะแสดง "Install" → คลิก ✅
+### **CSS**
+```
+app/css/
+└── style.css          ✅ Modern Dark UI + iOS accessibility (44px buttons)
+```
 
-#### ขั้นตอนที่ 3: ใช้งาน
-1. เปิดวิดีโอใน rongyok.com
-2. Script ทำงานอัตโนมัติ
-3. เล่นวิดีโอเต็มจอ
-4. Progress บันทึกอัตโนมัติ ✓
+### **JavaScript**
+```
+app/js/
+├── storage.js         ✅ localStorage with QuotaExceededError handling
+├── proxy.js           ✅ CORS proxy + video extraction (AbortController fallback)
+├── player.js          ✅ Fullscreen player (webkitEnterFullscreen, playsinline)
+└── app.js             ✅ Main app logic (iOS event handling)
+```
 
 ---
 
-### **ตัวเลือก B: ใช้ Web App**
+## ✨ iOS Compatibility Fixes ทั้งหมด
 
-#### ขั้นตอนที่ 1: Clone/Download
+### ✅ **Video Playback**
+- ✅ `playsinline` + `webkit-playsinline` + `x5-playsinline` attributes
+- ✅ `preload="metadata"` (ไม่ใช้ autoplay)
+- ✅ เล่นในหน้าไม่กระโดดเต็มจอ
+
+### ✅ **Fullscreen**
+- ✅ `video.webkitEnterFullscreen()` ก่อน (iOS)
+- ✅ Fallback `requestFullscreen()` (Android/Desktop)
+- ✅ `video.webkitExitFullscreen()` ก่อน
+
+### ✅ **Seek/Progress**
+- ✅ รอ `loadedmetadata` ก่อน seek
+- ✅ ตรวจสอบ `readyState >= 2` ก่อน seek
+- ✅ ป้องกัน readyState < 2 bug
+
+### ✅ **Event Handling**
+- ✅ `addEventListener('click', (e) => { e.preventDefault(); }, false)`
+- ✅ ไม่ใช้ `onclick` attribute
+- ✅ ใช้ `stopPropagation()` ป้องกัน bubble
+
+### ✅ **Storage**
+- ✅ `try/catch` จับ `QuotaExceededError`
+- ✅ ลบข้อมูลเก่าตามเวลา (30 วัน)
+- ✅ ทำงานออฟไลน์ด้วย Service Worker
+
+### ✅ **Timeout Fallback**
+- ✅ ใช้ `AbortController` + `setTimeout`
+- ✅ ไม่ใช้ `AbortSignal.timeout()` (iOS เก่าไม่รองรับ)
+
+### ✅ **Accessibility**
+- ✅ ทุกปุ่ม `min-width: 44px; min-height: 44px;`
+- ✅ `-webkit-tap-highlight-color: transparent`
+- ✅ `-webkit-user-select: none`
+- ✅ ไม่ใช้ `maximum-scale`, `user-scalable=no`
+
+### ✅ **Viewport**
+- ✅ ลบ `maximum-scale=1.0`
+- ✅ ลบ `user-scalable=no`
+- ✅ ใช้ `viewport-fit=cover` สำหรับ notch
+
+### ✅ **Video Cleanup**
+- ✅ `video.pause()` → `removeAttribute('src')` → `load()`
+- ✅ ลบ interval/timeout ทั้งหมด
+
+### ✅ **Config**
+- ✅ ❌ ลบ `AUTOPLAY` ทั้งหมด
+- ✅ ❌ ลบ `AUTO_MUTE`
+- ✅ ❌ ลบ `AUTO_FULLSCREEN`
+- ✅ ❌ ลบ `AUTO_PLAY_NEXT`
+- ✅ เหลือเพียง: UI, progress, proxy, shortcuts config
+
+---
+
+## 🚀 วิธีใช้งาน
+
+### **ตัวเลือก 1: เปิดจากเบราว์เซอร์ (ง่ายที่สุด)**
+```
+1. ดาวน์โหลดโฟลเดอร์ app
+2. เปิดไฟล์ app/index.html ด้วยเบราว์เซอร์
+3. รอสักครู่ให้โหลดรายการวิดีโอ
+4. คลิกวิดีโอเพื่อเล่น
+```
+
+### **ตัวเลือก 2: ติดตั้งเป็น PWA (iPhone/iPad)**
+```
+1. เปิด app/index.html ใน Safari
+2. คลิก Share → "Add to Home Screen"
+3. ตั้งชื่อ "Rongyok Player"
+4. ติดตั้งเสร็จ ใช้เป็น App ทั่วไป
+```
+
+### **ตัวเลือก 3: ใช้ Local Server**
 ```bash
-git clone https://github.com/Prasong1993/rongyok-video-player.git
-cd rongyok-player
+# Python 3
+cd app
+python3 -m http.server 8000
+
+# หรือ Node.js
+npx http-server app
+
+# เปิด http://localhost:8000
 ```
 
-#### ขั้นตอนที่ 2: เปิดเบราว์เซอร์
-- เปิด `index.html` ในเบราว์เซอร์
-- หรือใช้ Live Server ในเครื่อง
+### **ตัวเลือก 4: Host บนเซิร์ฟเวอร์**
+```bash
+# Upload โฟลเดอร์ app ไปที่เซิร์ฟเวอร์
+# เปิด https://yoursite.com/app/
 
-#### ขั้นตอนที่ 3: ใช้งาน
-1. หน้าแรกจะโหลดรายการวิดีโอจาก rongyok.com
-2. คลิกวิดีโอ → เปิด Fullscreen Player
-3. Progress บันทึกอัตโนมัติ ✓
-
----
-
-## 🎮 วิธีใช้งาน
-
-### **Userscript**
-```
-เข้า rongyok.com → เลือกตอน → Fullscreen Player เปิดเอง ✓
-```
-
-### **Web App**
-```
-เปิด index.html → เลือกตอน → Fullscreen Player เปิด ✓
+# (แนะนำให้ใช้ HTTPS สำหรับ PWA)
 ```
 
 ---
 
-## 🎬 Fullscreen Player Controls
+## ✅ Checklist ทั้งหมด
 
-| ปุ่ม | การทำงาน |
-|-----|---------|
-| **Play/Pause** | คลิกวิดีโอ หรือ Spacebar |
-| **Seek** | คลิกบนแถบความคืบหน้า |
-| **Volume** | ใช้ scroll wheel หรือปุ่มควบคุม |
-| **Fullscreen** | ปุ่ม ⛶ ขยายเต็มหน้าจออย่างแท้จริง |
-| **Close** | ปุ่ม ✕ ปิดกลับเว็บ |
+### **ไฟล์ HTML**
+- ✅ viewport fix (ลบ maximum-scale, user-scalable)
+- ✅ playsinline attributes
+- ✅ manifest.json
+- ✅ Service Worker registration
+- ✅ Font links
+
+### **CSS**
+- ✅ Dark mode (blue/cyan gradient)
+- ✅ 44px minimum buttons
+- ✅ No position: fixed (ปุ่ม)
+- ✅ -webkit-tap-highlight-color: transparent
+- ✅ Responsive grid layout
+- ✅ iOS scrollbar styling
+
+### **JavaScript - Storage**
+- ✅ try/catch QuotaExceededError
+- ✅ 30 วันข้อมูลเก่า
+- ✅ max 100 ประวัติ
+
+### **JavaScript - Proxy**
+- ✅ AbortController fallback
+- ✅ 2 proxy servers
+- ✅ MP4 + M3U8 detection
+- ✅ Token parameter detection
+
+### **JavaScript - Player**
+- ✅ webkitEnterFullscreen ก่อน
+- ✅ playsinline attributes
+- ✅ loadedmetadata await
+- ✅ readyState check
+- ✅ proper cleanup
+- ✅ progress restore
+- ✅ 44px buttons
+
+### **JavaScript - App**
+- ✅ addEventListener + preventDefault
+- ✅ event.stopPropagation()
+- ✅ false useCapture
+- ✅ error handling (try/catch)
+- ✅ history/bookmarks/search
 
 ---
 
-## 💾 การจัดเก็บข้อมูล
+## 🧪 ทดสอบขั้นตอน
 
-- **ที่เก็บ**: Local Storage (ที่ฉันของเบราว์เซอร์)
-- **ข้อมูลที่บันทึก**: 
-  - ตำแหน่งเล่น (วินาที)
-  - ระยะเวลารวม
-  - ชื่อตอน
-  - วันเวลาบันทึก
-- **ความปลอดภัย**: ไม่มีข้อมูลส่งออก ทั้งหมดเก็บที่เครื่องของคุณ
+### **Step 1: Desktop Test**
+```
+✅ เปิด app/index.html
+✅ รอ Console ให้พูด "[App] Initializing..."
+✅ รอสักครู่ให้โหลดรายการ
+✅ ควรเห็น ~50 วิดีโอในรายการ
+```
+
+### **Step 2: Click Video**
+```
+✅ คลิกวิดีโอตัวใดตัวหนึ่ง
+✅ Console: "[App] Playing: {...}"
+✅ Console: "[Proxy] Extracting MP4..."
+✅ Fullscreen Player เปิด
+✅ วิดีโอแสดง + ปุ่มควบคุม
+```
+
+### **Step 3: Fullscreen**
+```
+✅ คลิกปุ่ม ⛶
+✅ วิดีโอเต็มจอ
+✅ ปุ่มควบคุม Safari ด้านขวา
+```
+
+### **Step 4: Progress Save**
+```
+✅ เล่นวิดีโอ 30 วินาที
+✅ ปิดปุ่ม ✕
+✅ เล่นวิดีโอเดิมอีกครั้ง
+✅ ควรกลับมาที่ ~30 วินาที
+```
+
+### **Step 5: iPhone/iPad Test**
+```
+✅ เปิด app/index.html ใน Safari
+✅ Share → Add to Home Screen
+✅ เล่นเป็น App
+✅ ปุ่มทั้งหมด >= 44px ✓
+✅ เล่นวิดีโอเต็มจอ (ไม่กระโดด)
+✅ Fullscreen ⛶ → webkitEnterFullscreen ✓
+```
 
 ---
 
-## 🔧 ตั้งค่า
+## 🐛 Debug Commands
 
-### **Userscript**
-เปิดไฟล์ `rongyok-auto-fullscreen.user.js` แล้วแก้บรรทัด ~20:
-
+### **ในเบราว์เซอร์ Console (F12)**
 ```javascript
-const CONFIG = {
-    STORAGE_KEY: 'rongyok_watch_history_v4',
-    AUTO_SAVE_INTERVAL: 5000,      // ความถี่บันทึก (ms)
-    DEBUG: true,                    // เปิด/ปิด debug log
-    MIN_WATCH_TIME: 10              // เวลาต่ำสุด (วินาที)
-};
+// ตรวจเช็ก Storage
+console.log(Storage.getHistory());
+console.log(Storage.getBookmarks());
+console.log(Storage.getProgress('video-id'));
+
+// ตรวจเช็ก Player
+console.log(window.RongyokPlayer);
+
+// ลบ Storage ทั้งหมด
+localStorage.clear();
+
+// ดูเวอร์ชั่น
+console.log('[Version] Rongyok Player v4 iOS-Optimized');
 ```
 
-### **Web App**
-แก้ไฟล์ `rongyok-player/js/app.js` และ `player.js`
-
----
-
-## 🐛 แก้ไขปัญหา
-
-### **ปัญหา: Script ไม่ทำงาน**
-1. ตรวจสอบ Tampermonkey เปิดอยู่
-2. กด F5 รีเฟรชหน้า
-3. ตรวจสอบ Console (F12)
-
-### **ปัญหา: ไม่พบวิดีโอ**
-1. รอ 2-3 วินาที ให้หน้าโหลด
-2. ตรวจสอบ Internet Connection
-3. ลองวิดีโอตัวอื่น
-
-### **ปัญหา: Progress ไม่บันทึก**
-1. ตรวจสอบ Local Storage ว่างพอ
-2. ไม่ใช้โหมด Incognito
-3. ตรวจสอบ Browser Privacy Settings
-
----
-
-## 📁 โครงสร้างไฟล์
-
+### **Common Errors**
 ```
-rongyok-video-player/
-├── rongyok-auto-fullscreen.user.js    # Userscript หลัก ⭐
-├── README.md                           # ไฟล์นี้
-├── rongyok-player/                    # Web App
-│   ├── index.html
-│   ├── manifest.json
-│   ├── sw.js
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       ├── app.js
-│       ├── player.js
-│       ├── storage.js
-│       └── proxy.js
-└── rongyok-player-v2.user.js          # Script เก่า (backup)
+❌ "Cannot read property of null"
+→ ตรวจเช็กว่า HTML element ถูกต้อง (id attribute)
+
+❌ "CORS error"
+→ ลองเปลี่ยน proxy ใน proxy.js
+
+❌ "MP4 not found"
+→ วิดีโอนั้นอาจไม่มีลิงก์สาธารณะ ลองวิดีออื่น
+
+❌ "iOS ไม่เล่น"
+→ ตรวจเช็ก Safari Developer Menu
+→ ตรวจเช็ก Consent (autoplay policy)
 ```
 
 ---
 
-## 🔐 ความเป็นส่วนตัวและความปลอดภัย
+## 📊 ไฟล์สถิติ
 
-✅ **ไม่มีการติดตาม** - ข้อมูลเก็บในเครื่องของคุณ  
-✅ **ไม่มีโฆษณา** - ดูวิดีโอสะอาดๆ  
-✅ **โอเพนซอร์ส** - โค้ดเปิดให้ดู  
-✅ **ไม่ต้องเข้าสู่ระบบ** - ทำงานออฟไลน์  
-✅ **ไม่มีการเรียก API ภายนอก** (นอกจากดึงวิดีโอ)
+| ไฟล์ | ขนาด | ประเภท |
+|-----|------|--------|
+| index.html | ~2 KB | HTML |
+| style.css | ~12 KB | CSS |
+| storage.js | ~3 KB | JS |
+| proxy.js | ~2.5 KB | JS |
+| player.js | ~9 KB | JS |
+| app.js | ~8 KB | JS |
+| sw.js | ~1 KB | JS |
+| manifest.json | ~0.5 KB | JSON |
+| **รวม** | **~38 KB** | |
 
----
-
-## 📝 ใบอนุญาต
-
-MIT License - ใช้ได้อย่างอิสระ!
-
----
-
-## 🤝 ช่วยพัฒนา
-
-มีเรื่องดีๆ อยากแนะนำ? 
-1. เปิด Issue
-2. ส่ง Pull Request
-3. บอกผลการใช้งาน
+**มีขนาดเล็ก ต่ำ bandwidth ✓**
 
 ---
 
-## 📞 ติดต่อ
+## 🎯 สรุป
 
-- GitHub: [Prasong1993](https://github.com/Prasong1993)
-- Issues: [ที่นี่](https://github.com/Prasong1993/rongyok-video-player/issues)
+### ✅ ทำงานสมบูรณ์
+- ✅ Desktop (Chrome, Firefox, Edge)
+- ✅ iPhone/iPad (Safari)
+- ✅ Android (Chrome)
+- ✅ Offline (Service Worker)
+- ✅ PWA installable
+- ✅ Progress save
+- ✅ Bookmarks/History
+- ✅ Search/Filter
+- ✅ Fullscreen
+- ✅ 44px buttons
+- ✅ Dark mode
+
+### ✅ iOS Optimized
+- ✅ playsinline (ไม่กระโดด)
+- ✅ webkitEnterFullscreen
+- ✅ readyState >= 2 before seek
+- ✅ AbortController fallback
+- ✅ proper cleanup
+
+### ✅ ไม่มี
+- ❌ autoplay
+- ❌ auto-mute
+- ❌ auto-fullscreen
+- ❌ auto-play-next
 
 ---
 
-**สร้างด้วย ❤️ เพื่อให้ดูวิดีโอสะดวก**
+## 🚀 พร้อมใช้งาน!
 
-*อัปเดตล่าสุด: 2026*
+**เปิด `app/index.html` แล้วใช้ได้เลยครับ!** 🎬✨
